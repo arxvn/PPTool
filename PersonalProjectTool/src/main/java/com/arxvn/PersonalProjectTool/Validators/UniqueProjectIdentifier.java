@@ -5,6 +5,7 @@
  */
 package com.arxvn.PersonalProjectTool.Validators;
 
+import com.arxvn.PersonalProjectTool.Services.UniqueProjectIdentifierValidatorService;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,7 +19,7 @@ import javax.validation.Payload;
  */
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueProjectIdentifierValidator.class)
+@Constraint(validatedBy = UniqueProjectIdentifierValidatorService.class)
 public @interface UniqueProjectIdentifier {
     String message() default "A identifier already exists of that name.";
     Class<?>[] groups() default {};

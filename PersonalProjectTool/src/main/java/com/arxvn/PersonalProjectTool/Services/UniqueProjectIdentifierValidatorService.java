@@ -3,18 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.arxvn.PersonalProjectTool.Validators;
+package com.arxvn.PersonalProjectTool.Services;
 
 import com.arxvn.PersonalProjectTool.Repositories.ProjectRepository;
+import com.arxvn.PersonalProjectTool.Validators.UniqueProjectIdentifier;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author aruns
  */
-class UniqueProjectIdentifierValidator implements ConstraintValidator<UniqueProjectIdentifier, String> {
+@Service
+public class UniqueProjectIdentifierValidatorService implements ConstraintValidator<UniqueProjectIdentifier, String> {
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -24,6 +27,6 @@ class UniqueProjectIdentifierValidator implements ConstraintValidator<UniqueProj
     }
 
     public boolean isValid(String projectIdentifier, ConstraintValidatorContext context) {
-        return projectIdentifier != null && projectRepository.findOneByProjectIdentifier(projectIdentifier).isEmpty();
+        return projectIdentifier != null && projectRepository.findByProjectIdentifier(projectIdentifier) == null;
     }
 }
