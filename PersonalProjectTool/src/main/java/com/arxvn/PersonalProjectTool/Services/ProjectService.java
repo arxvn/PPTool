@@ -21,7 +21,8 @@ public class ProjectService {
     private ProjectRepository projectRepository;
     
     public Project saveOrUpdateProject(Project project){
+        project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
         return projectRepository.save(project);
-    }
+    } 
             
 }

@@ -27,6 +27,11 @@ public class UniqueProjectIdentifierValidatorService implements ConstraintValida
     }
 
     public boolean isValid(String projectIdentifier, ConstraintValidatorContext context) {
+
+        if (projectIdentifier != null) {
+            projectIdentifier = projectIdentifier.toUpperCase();
+
+        }
         return projectIdentifier != null && projectRepository.findByProjectIdentifier(projectIdentifier) == null;
     }
 }

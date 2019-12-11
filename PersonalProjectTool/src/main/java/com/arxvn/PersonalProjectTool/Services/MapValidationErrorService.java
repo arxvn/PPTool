@@ -5,7 +5,10 @@
  */
 package com.arxvn.PersonalProjectTool.Services;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -24,14 +27,16 @@ public class MapValidationErrorService {
 
         if (result.hasErrors()) {
 
-            Map<String, String> errorMap = new HashMap<>();
+            Map<String, List<String>> errorMap = new HashMap<>();
 
             errorMap = result.getFieldErrors().stream()
                     .collect(
                             Collectors.toMap((fieldError) -> fieldError.getField(),
-                                    (fieldError) -> fieldError.getDefaultMessage())
-                    );
-            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
+                                    (fieldError) -> new ArrayList<>(Arrays.asList(fieldError.getDefaultMessage())),
+                                    (l1,l2)->{l1.addAll(l2);return l1;}));
+                         
+                   
+            return new ResponseEntity<Map<String, List<String>>>(errorMap, HttpStatus.BAD_REQUEST);
         }
 
         return null;

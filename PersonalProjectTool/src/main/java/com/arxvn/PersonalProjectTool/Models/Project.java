@@ -20,18 +20,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "Projects")
 public class Project {
+
     @Id
     private String id;
     @NotBlank(message = "Project name is required")
     private String projectName;
-    @NotBlank(message = "Project Identifier is required")
-    @Size(min=4 , max=5, message = "Please use 4-5 characters")
-    @Indexed(unique = true )
+
+    @Indexed(unique = true)
     @UniqueProjectIdentifier
+    @Size(min = 4, max = 5, message = "Please use 4-5 characters")
+    @NotBlank(message = "Project Identifier is required")
     private String projectIdentifier;
     @NotBlank(message = "Project description is required.")
     private String description;
-    
+
     private Date start_date;
     private Date end_date;
     private Date created_at;
@@ -47,7 +49,6 @@ public class Project {
     public void setId(String id) {
         this.id = id;
     }
-
 
     public String getProjectName() {
         return projectName;
@@ -104,7 +105,5 @@ public class Project {
     public void setLastUpdated_at(Date lastUpdated_at) {
         this.lastUpdated_at = lastUpdated_at;
     }
-    
-    
-    
+
 }
