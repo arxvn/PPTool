@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class UniqueProjectIdentifierValidatorService implements ConstraintValidator<UniqueProjectIdentifier, String> {
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectService projectService;
 
     @Override
     public void initialize(UniqueProjectIdentifier constraint) {
@@ -32,6 +32,6 @@ public class UniqueProjectIdentifierValidatorService implements ConstraintValida
             projectIdentifier = projectIdentifier.toUpperCase();
 
         }
-        return projectIdentifier != null && projectRepository.findByProjectIdentifier(projectIdentifier) == null;
+        return projectIdentifier != null && projectService.findById(projectIdentifier) == null;
     }
 }
