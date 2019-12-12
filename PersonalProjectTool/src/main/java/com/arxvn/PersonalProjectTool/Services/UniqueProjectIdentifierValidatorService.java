@@ -5,7 +5,6 @@
  */
 package com.arxvn.PersonalProjectTool.Services;
 
-import com.arxvn.PersonalProjectTool.Repositories.ProjectRepository;
 import com.arxvn.PersonalProjectTool.Validators.UniqueProjectIdentifier;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -30,8 +29,7 @@ public class UniqueProjectIdentifierValidatorService implements ConstraintValida
 
         if (projectIdentifier != null) {
             projectIdentifier = projectIdentifier.toUpperCase();
-
         }
-        return projectIdentifier != null && projectService.findById(projectIdentifier) == null;
+        return projectIdentifier != null && projectService.findByProjectIdentifier(projectIdentifier) == null;
     }
 }

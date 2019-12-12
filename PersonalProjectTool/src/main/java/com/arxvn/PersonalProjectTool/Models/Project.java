@@ -8,7 +8,6 @@ package com.arxvn.PersonalProjectTool.Models;
 import com.arxvn.PersonalProjectTool.Validators.UniqueProjectIdentifier;
 import java.util.Date;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,17 +20,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Projects")
 public class Project {
 
+    public interface Create {
+    }
+
+    public interface Update {
+    }
+    
     @Id
     private String id;
-    @NotBlank(message = "Project name is required")
+    @NotBlank(message = "Project name is required", groups = {Create.class, Update.class})
     private String projectName;
 
     @Indexed(unique = true)
-    @UniqueProjectIdentifier
-    @Size(min = 4, max = 5, message = "Please use 4-5 characters")
-    @NotBlank(message = "Project Identifier is required")
+    @UniqueProjectIdentifier(groups = {Create.class})
+    @Size(min = 4, max = 5, message = "Please use 4-5 characters", groups = {Create.class, Update.class})
+    @NotBlank(message = "Project Identifier is required", groups = {Create.class, Update.class})
     private String projectIdentifier;
-    @NotBlank(message = "Project description is required.")
+    @NotBlank(message = "Project description is required.", groups = {Create.class, Update.class})
     private String description;
 
     private Date start_date;

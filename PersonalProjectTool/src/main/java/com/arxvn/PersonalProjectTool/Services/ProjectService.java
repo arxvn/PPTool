@@ -7,8 +7,15 @@ package com.arxvn.PersonalProjectTool.Services;
 
 import com.arxvn.PersonalProjectTool.Exceptions.ExceptionObjects.EntityNotFoundException;
 import com.arxvn.PersonalProjectTool.Models.Project;
-import com.arxvn.PersonalProjectTool.Repositories.ProjectRepository;
+import org.bson.Document;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import org.springframework.data.mongodb.core.query.Query;
+import static org.springframework.data.mongodb.core.query.Query.query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,22 +26,42 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 
     @Autowired
-    private ProjectRepository projectRepository;
+    MongoTemplate mongoTemplate;
 
-    public Project saveOrUpdateProject(Project project) {
+    public Project saveProject(Project project) {
         project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
-        return projectRepository.save(project);
+        return mongoTemplate.insert(project);
     }
 
-    public Project findById(String id) {
-        Project project = projectRepository.findByProjectIdentifier(id.toUpperCase());
-        if (project == null) {
-            throw new EntityNotFoundException(Project.class, "Project Identifier", id.toString());
-        }
+    public Project findByProjectIdentifier(String id) {
+        Query query = query(where("projectIdentifier").is(id.toUpperCase()));
+        Project project = mongoTemplate.findOne(query, Project.class);
         return project;
     }
-    
-    public Iterable<Project> findAllProjects(){
-        return projectRepository.findAll();
+
+    public Iterable<Project> findAllProjects() {
+        return mongoTemplate.findAll(Project.class);
+    }
+
+    public void deleteProjectByIdentifier(String projectId) {
+        Project project = findByProjectIdentifier(projectId);
+        if (project == null) {
+            throw new EntityNotFoundException(Project.class, "projectId", projectId);
+        }
+        mongoTemplate.remove(query(where("projectIdentifier").is(projectId.toUpperCase())), Project.class);
+    }
+
+    public Project updateProject(Project project) {
+        Document doc = new Document();
+        mongoTemplate.getConverter().write(project, doc);
+        Update update = new Update();
+        for (String key : doc.keySet()) {
+            Object value = doc.get(key);
+            if (value != null) {
+                update.set(key, value);
+            }
+        }
+        return mongoTemplate.findAndModify(query(where("projectIdentifier").is(project.getProjectIdentifier().toUpperCase())), update, FindAndModifyOptions.options().returnNew(true), Project.class);
+
     }
 }
