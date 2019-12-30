@@ -12,6 +12,8 @@ import javax.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 /**
  *
@@ -43,6 +45,9 @@ public class Project {
     private Date end_date;
     private Date created_at;
     private Date lastUpdated_at;
+    
+    @Field(targetType = FieldType.OBJECT_ID)
+    private String backlogID;
 
     public Project() {
     }
@@ -111,4 +116,13 @@ public class Project {
         this.lastUpdated_at = lastUpdated_at;
     }
 
+    public String getBacklogID() {
+        return backlogID;
+    }
+
+    public void setBacklogID(String backlogID) {
+        this.backlogID = backlogID;
+    }
+
+    
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.arxvn.PersonalProjectTool.Services;
+package com.arxvn.PersonalProjectTool.Services.ValErrServices;
 
 import java.util.ArrayList;
 import java.util.Arrays;

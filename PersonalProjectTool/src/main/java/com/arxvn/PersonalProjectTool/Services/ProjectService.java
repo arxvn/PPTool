@@ -6,7 +6,9 @@
 package com.arxvn.PersonalProjectTool.Services;
 
 import com.arxvn.PersonalProjectTool.Exceptions.ExceptionObjects.EntityNotFoundException;
+import com.arxvn.PersonalProjectTool.Models.Backlog;
 import com.arxvn.PersonalProjectTool.Models.Project;
+import java.util.Date;
 import org.bson.Document;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,10 @@ public class ProjectService {
 
     public Project saveProject(Project project) {
         project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+        Backlog backlog = new Backlog();
+        backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+        backlog = mongoTemplate.insert(backlog);
+        project.setBacklogID(backlog.getId());
         return mongoTemplate.insert(project);
     }
 
@@ -52,7 +58,12 @@ public class ProjectService {
     }
 
     public Project updateProject(Project project) {
+        Project p = findByProjectIdentifier(project.getProjectIdentifier());
+        if (p == null) {
+            throw new EntityNotFoundException(Project.class, "projectId", project.getProjectIdentifier());
+        }
         Document doc = new Document();
+        project.setLastUpdated_at(new Date());
         mongoTemplate.getConverter().write(project, doc);
         Update update = new Update();
         for (String key : doc.keySet()) {

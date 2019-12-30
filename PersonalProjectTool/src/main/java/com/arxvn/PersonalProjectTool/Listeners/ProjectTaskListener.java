@@ -5,10 +5,8 @@
  */
 package com.arxvn.PersonalProjectTool.Listeners;
 
-import com.arxvn.PersonalProjectTool.Models.Project;
 import com.arxvn.PersonalProjectTool.Models.ProjectTask;
 import java.util.Date;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 
@@ -16,14 +14,12 @@ import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
  *
  * @author aruns
  */
-@Configuration
-public class ProjectListener extends AbstractMongoEventListener<Project> {
-
-    @Override
-    public void onBeforeConvert(BeforeConvertEvent<Project> event) {
+public class ProjectTaskListener extends AbstractMongoEventListener<ProjectTask>{
+        @Override
+    public void onBeforeConvert(BeforeConvertEvent<ProjectTask> event) {
 
         super.onBeforeConvert(event);
-        Project entity = event.getSource();
+        ProjectTask entity = event.getSource();
         Date d = new Date();
 
         if (entity.getCreated_at() == null) {
@@ -32,8 +28,4 @@ public class ProjectListener extends AbstractMongoEventListener<Project> {
 
         entity.setLastUpdated_at(d);
     }
-    
-
-
-
 }

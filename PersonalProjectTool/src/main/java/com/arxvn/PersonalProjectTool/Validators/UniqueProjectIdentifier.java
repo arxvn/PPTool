@@ -5,7 +5,7 @@
  */
 package com.arxvn.PersonalProjectTool.Validators;
 
-import com.arxvn.PersonalProjectTool.Services.UniqueProjectIdentifierValidatorService;
+import com.arxvn.PersonalProjectTool.Services.ValErrServices.UniqueProjectIdentifierValidatorService;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

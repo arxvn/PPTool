@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.arxvn.PersonalProjectTool.Services;
+package com.arxvn.PersonalProjectTool.Services.ValErrServices;
 
+import com.arxvn.PersonalProjectTool.Services.ProjectService;
 import com.arxvn.PersonalProjectTool.Validators.UniqueProjectIdentifier;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
