@@ -31,6 +31,6 @@ public class UniqueProjectIdentifierValidatorService implements ConstraintValida
         if (projectIdentifier != null) {
             projectIdentifier = projectIdentifier.toUpperCase();
         }
-        return projectIdentifier != null && projectService.findByProjectIdentifier(projectIdentifier) == null;
+        return projectIdentifier != null && projectService.findByProjectIdentifier(projectIdentifier, 1) == null;
     }
 }

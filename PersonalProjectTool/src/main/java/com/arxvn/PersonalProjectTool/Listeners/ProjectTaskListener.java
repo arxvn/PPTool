@@ -7,6 +7,7 @@ package com.arxvn.PersonalProjectTool.Listeners;
 
 import com.arxvn.PersonalProjectTool.Models.ProjectTask;
 import java.util.Date;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 
@@ -14,8 +15,10 @@ import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
  *
  * @author aruns
  */
-public class ProjectTaskListener extends AbstractMongoEventListener<ProjectTask>{
-        @Override
+@Configuration
+public class ProjectTaskListener extends AbstractMongoEventListener<ProjectTask> {
+
+    @Override
     public void onBeforeConvert(BeforeConvertEvent<ProjectTask> event) {
 
         super.onBeforeConvert(event);

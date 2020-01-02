@@ -29,6 +29,15 @@ public class ProjectService {
 
     @Autowired
     MongoTemplate mongoTemplate;
+    
+    @Autowired
+    ProjectTaskService projectTaskService;
+    
+    @Autowired
+    BacklogService backlogService;
+
+    public ProjectService() {
+    }
 
     public Project saveProject(Project project) {
         project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
@@ -39,40 +48,47 @@ public class ProjectService {
         return mongoTemplate.insert(project);
     }
 
-    public Project findByProjectIdentifier(String id) {
+    public Project findByProjectIdentifier(String id, Integer i) {
         Query query = query(where("projectIdentifier").is(id.toUpperCase()));
         Project project = mongoTemplate.findOne(query, Project.class);
         return project;
     }
 
+    public Project findByProjectIdentifier(String id) {
+        Query query = query(where("projectIdentifier").is(id.toUpperCase()));
+        Project project = mongoTemplate.findOne(query, Project.class);
+        if (project == null) {
+            throw new EntityNotFoundException(Project.class, "projectIed", id);
+        }
+        return project;
+    }
+
     public Iterable<Project> findAllProjects() {
+        
         return mongoTemplate.findAll(Project.class);
     }
 
     public void deleteProjectByIdentifier(String projectId) {
         Project project = findByProjectIdentifier(projectId);
-        if (project == null) {
-            throw new EntityNotFoundException(Project.class, "projectId", projectId);
-        }
         mongoTemplate.remove(query(where("projectIdentifier").is(projectId.toUpperCase())), Project.class);
+        projectTaskService.deleteProjectTasksByIdentifier(projectId);
+        backlogService.deleteByProjectIdentifier(projectId);
     }
 
     public Project updateProject(Project project) {
-        Project p = findByProjectIdentifier(project.getProjectIdentifier());
+        Document doc = new Document();
+        project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+        project.setLastUpdated_at(new Date());
+        mongoTemplate.getConverter().write(project, doc);
+        Update update = UpdateHelperService.fromDocExcludeNullFields(doc);
+        Project p = mongoTemplate.findAndModify(query(where("projectIdentifier")
+                .is(project.getProjectIdentifier().toUpperCase())), update,
+                FindAndModifyOptions.options().returnNew(true), Project.class);
         if (p == null) {
             throw new EntityNotFoundException(Project.class, "projectId", project.getProjectIdentifier());
         }
-        Document doc = new Document();
-        project.setLastUpdated_at(new Date());
-        mongoTemplate.getConverter().write(project, doc);
-        Update update = new Update();
-        for (String key : doc.keySet()) {
-            Object value = doc.get(key);
-            if (value != null) {
-                update.set(key, value);
-            }
-        }
-        return mongoTemplate.findAndModify(query(where("projectIdentifier").is(project.getProjectIdentifier().toUpperCase())), update, FindAndModifyOptions.options().returnNew(true), Project.class);
+        return p;
 
     }
+
 }

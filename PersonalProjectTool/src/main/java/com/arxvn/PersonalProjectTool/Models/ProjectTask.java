@@ -5,6 +5,8 @@
  */
 package com.arxvn.PersonalProjectTool.Models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
@@ -16,14 +18,14 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
  *
  * @author aruns
  */
-
 @Document(collection = "ProjectTasks")
+@JsonInclude(Include.NON_NULL)
 public class ProjectTask {
-    
+
     @Id
     private String id;
     private String projectSequence;
-    
+
     @NotBlank(message = "Please include a project summary")
     private String summary;
     private String acceptanceCriteria;
@@ -32,10 +34,10 @@ public class ProjectTask {
     private Date dueDate;
     private Date created_at;
     private Date lastUpdated_at;
-    
+
     private String projectIdentifier;
-    
-    @Field(targetType = FieldType.OBJECT_ID)    
+
+    @Field(targetType = FieldType.OBJECT_ID)
     private String backlogID;
 
     public ProjectTask() {
@@ -128,19 +130,10 @@ public class ProjectTask {
     public void setBacklogID(String backlogID) {
         this.backlogID = backlogID;
     }
-    
-    
 
     @Override
     public String toString() {
         return "ProjectTask{" + "id=" + id + ", projectSequence=" + projectSequence + ", summary=" + summary + ", acceptanceCriteria=" + acceptanceCriteria + ", status=" + status + ", priority=" + priority + ", dueDate=" + dueDate + ", created_at=" + created_at + ", lastUpdated_at=" + lastUpdated_at + '}';
     }
-    
-    
-    
-            
-    
-    
-    
-    
+
 }

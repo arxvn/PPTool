@@ -6,11 +6,11 @@
 package com.arxvn.PersonalProjectTool.Listeners;
 
 import com.arxvn.PersonalProjectTool.Models.Project;
-import com.arxvn.PersonalProjectTool.Models.ProjectTask;
 import java.util.Date;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
+import org.springframework.data.mongodb.core.mapping.event.MongoMappingEvent;
 
 /**
  *
@@ -33,7 +33,4 @@ public class ProjectListener extends AbstractMongoEventListener<Project> {
         entity.setLastUpdated_at(d);
     }
     
-
-
-
 }

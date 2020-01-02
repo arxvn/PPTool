@@ -5,6 +5,7 @@
  */
 package com.arxvn.PersonalProjectTool.Exceptions;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import org.springframework.http.HttpStatus;
 
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author aruns
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiError {
 
     private HttpStatus status;
@@ -73,14 +75,5 @@ public class ApiError {
     public void setDebugMessage(String debugMessage) {
         this.debugMessage = debugMessage;
     }
-
-
-
-  
-
-
-
-
-
 
 }

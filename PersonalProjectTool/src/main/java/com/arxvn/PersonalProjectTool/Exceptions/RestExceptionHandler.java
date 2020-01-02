@@ -6,6 +6,7 @@
 package com.arxvn.PersonalProjectTool.Exceptions;
 
 import com.arxvn.PersonalProjectTool.Exceptions.ExceptionObjects.EntityNotFoundException;
+import com.arxvn.PersonalProjectTool.Exceptions.ExceptionObjects.EntityNotMatchPathException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
             EntityNotFoundException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(EntityNotMatchPathException.class)
+    protected ResponseEntity<Object> handleEntityNotMatch(
+            EntityNotMatchPathException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
