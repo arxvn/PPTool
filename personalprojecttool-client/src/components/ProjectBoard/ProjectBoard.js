@@ -8,17 +8,48 @@ class ProjectBoard extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      errors: {}
+    };
   }
 
   componentDidMount() {
     const { id } = this.props.match.params;
-
     this.props.getBacklog(id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
   }
   render() {
     const { id } = this.props.match.params;
+    const { project_tasks } = this.props.backlog;
+    const { errors } = this.state;
 
+    let boardContent;
+
+    const boardAlgorith = (errors, project_tasks) => {
+      if (project_tasks.length < 1) {
+        if (errors.classifier === "NOT_FOUND") {
+          return (
+            <div className="alert alert-danger text-center" role="alert">
+              {errors.message}
+            </div>
+          );
+        } else {
+          return (
+            <div className="alert alert-info text-center" role="alert">
+              No Project Tasks on this board
+            </div>
+          );
+        }
+      } else {
+        return <Backlog project_tasks_prop={project_tasks} />;
+      }
+    };
+    boardContent = boardAlgorith(errors, project_tasks);
     return (
       <div className="container">
         <Link to={`/addProjectTask/${id}`} className="btn btn-primary mb-3">
@@ -26,8 +57,7 @@ class ProjectBoard extends Component {
         </Link>
         <br />
         <hr />
-
-        <Backlog />
+        {boardContent}
       </div>
     );
   }

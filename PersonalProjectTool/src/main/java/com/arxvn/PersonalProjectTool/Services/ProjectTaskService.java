@@ -59,10 +59,10 @@ public class ProjectTaskService {
         backlog.setPtSequence(backlogSequence);
         projectTask.setProjectSequence(backlog.getProjectIdentifier() + "-" + backlogSequence.toString());
         projectTask.setProjectIdentifier(backlog.getProjectIdentifier());
-        if (projectTask.getPriority() == null) {
+        if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
             projectTask.setPriority(3);
         }
-        if (projectTask.getStatus() == null) {
+        if (projectTask.getStatus() == null || projectTask.getStatus() == "") {
             projectTask.setStatus("TO_DO");
         }
         projectTask.setId(new ObjectId().toString());
@@ -79,7 +79,7 @@ public class ProjectTaskService {
         List<ProjectTask> projectTaskList = new ArrayList();
         MatchOperation matchStage = Aggregation.match(new Criteria("projectIdentifier").is(id));
         SortOperation sortBypriority = sort(Direction.DESC, "priority");
-        ProjectionOperation projectStage = Aggregation.project("priority", "status", "summary", "projectSequence", "created_at", "lastUpdated_at", "projectIdentifier");
+        ProjectionOperation projectStage = Aggregation.project("priority", "status", "summary", "projectSequence", "created_at", "lastUpdated_at", "projectIdentifier", "acceptanceCriteria");
 
         Aggregation aggregation = Aggregation.newAggregation(matchStage, projectStage, sortBypriority);
 
@@ -111,8 +111,8 @@ public class ProjectTaskService {
         projectTask.setLastUpdated_at(new Date());
         mongoTemplate.getConverter().write(projectTask, doc);
         Update update = UpdateHelperService.fromDocExcludeNullFields(doc);
-        ProjectTask p = mongoTemplate.findAndModify(query(where("projectIdentifier")
-                .is(projectTask.getProjectIdentifier().toUpperCase())), update,
+        ProjectTask p = mongoTemplate.findAndModify(query(where("projectSequence")
+                .is(projectTask.getProjectSequence().toUpperCase())), update,
                 FindAndModifyOptions.options().returnNew(true), ProjectTask.class);
         if (p == null) {
             throw new EntityNotFoundException(Project.class, "projectId", projectTask.getProjectIdentifier());

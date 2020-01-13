@@ -20,6 +20,7 @@ public class ApiError {
     private Date timestamp;
     private String message;
     private String debugMessage;
+    private String classifier;
 
     private ApiError() {
         timestamp = new Date();
@@ -76,4 +77,13 @@ public class ApiError {
         this.debugMessage = debugMessage;
     }
 
+    public String getClassifier() {
+        return classifier;
+    }
+
+    public void setClassifier(String classifier) {
+        this.classifier = classifier;
+    }
+
+    
 }

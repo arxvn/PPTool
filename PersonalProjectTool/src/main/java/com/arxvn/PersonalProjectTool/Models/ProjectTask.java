@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
  * @author aruns
  */
 @Document(collection = "ProjectTasks")
-@JsonInclude(Include.NON_NULL)
+//@JsonInclude(Include.NON_NULL)
 public class ProjectTask {
 
     @Id

@@ -33,5 +33,73 @@ export const getBacklog = backlog_id => async dispatch => {
       type: GET_BACKLOG,
       payload: res.data
     });
-  } catch (err) {}
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    });
+  }
+};
+
+export const getProjectTask = (
+  projectIdentifier,
+  projectSequence,
+  history
+) => async dispatch => {
+  try {
+    const res = await axios.get(
+      `/api/backlog/${projectIdentifier}/${projectSequence}`
+    );
+    dispatch({
+      type: GET_PROJECT_TASK,
+      payload: res.data
+    });
+  } catch (err) {
+    history.push(`/projectBoard/${projectIdentifier}`);
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    });
+  }
+};
+
+export const updateProjectTask = (
+  projectIdentifier,
+  projectSequence,
+  projectTask,
+  history
+) => async dispatch => {
+  try {
+    await axios.patch(
+      `/api/backlog/${projectIdentifier}/${projectSequence}`,
+      projectTask
+    );
+    history.push(`/projectBoard/${projectIdentifier}`);
+    dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    });
+  }
+};
+
+export const deleteProjectTask = (
+  projectIdentifier,
+  projectSequence
+) => async dispatch => {
+  if (
+    window.confirm(
+      `Are you sure you wish to delete project task ${projectSequence}?`
+    )
+  ) {
+    await axios.delete(`/api/backlog/${projectIdentifier}/${projectSequence}`);
+    dispatch({
+      type: DELETE_PROJECT_TASK,
+      payload: projectSequence
+    });
+  }
 };
